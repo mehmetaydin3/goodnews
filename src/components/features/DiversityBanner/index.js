@@ -1,1 +1,0 @@
-export { DiversityBanner } from './DiversityBanner';

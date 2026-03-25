@@ -1,1 +1,0 @@
-export { MusicianDetailPage } from './MusicianDetailPage';

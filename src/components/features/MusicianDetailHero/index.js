@@ -1,1 +1,0 @@
-export { MusicianDetailHero } from './MusicianDetailHero';
