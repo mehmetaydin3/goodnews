@@ -1,4 +1,4 @@
-import Anthropic from '@anthropic-ai/sdk';
+import Groq from 'groq-sdk';
 import { prisma, createWorker, summarizerQueue, CATEGORIES } from '@goodnews/shared';
 
 interface ClassifierJob {
@@ -12,8 +12,8 @@ interface ClassifyResult {
   sentiment: 'POSITIVE' | 'UPLIFTING' | 'INSPIRING';
 }
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY,
 });
 
 const CATEGORY_NAMES = CATEGORIES.map((c) => c.name);
@@ -61,8 +61,8 @@ async function classifyWithClaude(
 ): Promise<ClassifyResult> {
   const snippet = content.slice(0, 500);
 
-  const message = await anthropic.messages.create({
-    model: 'claude-haiku-4-5-20251001',
+  const message = await groq.chat.completions.create({
+    model: 'llama-3.1-8b-instant',
     max_tokens: 256,
     messages: [
       {
@@ -86,8 +86,7 @@ Respond with ONLY valid JSON, no markdown, no explanation:
     ],
   });
 
-  const text =
-    message.content[0].type === 'text' ? message.content[0].text.trim() : '';
+  const text = message.choices[0]?.message?.content?.trim() ?? '';
   const parsed = JSON.parse(text) as {
     category: string;
     sentiment: 'POSITIVE' | 'UPLIFTING' | 'INSPIRING';

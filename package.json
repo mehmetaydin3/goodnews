@@ -3,8 +3,9 @@
   "private": true,
   "workspaces": ["agents/*", "shared", "api", "frontend"],
   "scripts": {
-    "dev": "concurrently \"npm run dev --workspace=api\" \"npm run dev --workspace=frontend\"",
-    "agents:all": "concurrently \"npm run start --workspace=agents/fetcher\" \"npm run start --workspace=agents/deduper\" \"npm run start --workspace=agents/classifier\" \"npm run start --workspace=agents/summarizer\" \"npm run start --workspace=agents/reshare\" \"npm run start --workspace=agents/analytics\"",
+    "build:shared": "npm run build --workspace=shared",
+    "dev": "npm run build:shared && concurrently \"npm run dev --workspace=api\" \"npm run dev --workspace=frontend\"",
+    "agents:all": "npm run build:shared && concurrently \"npm run start --workspace=agents/fetcher\" \"npm run start --workspace=agents/deduper\" \"npm run start --workspace=agents/classifier\" \"npm run start --workspace=agents/summarizer\" \"npm run start --workspace=agents/reshare\" \"npm run start --workspace=agents/analytics\"",
     "db:migrate": "npm run migrate --workspace=shared",
     "db:seed": "npm run seed --workspace=shared"
   },

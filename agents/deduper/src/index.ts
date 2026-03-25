@@ -3,6 +3,7 @@ import { prisma, createWorker, classifierQueue } from '@goodnews/shared';
 
 interface DeduperJob {
   rawArticleId: string;
+  images?: string[];
 }
 
 function normalizeTitle(title: string): string {
@@ -27,7 +28,7 @@ function stripHtml(html: string): string {
 }
 
 const worker = createWorker<DeduperJob>('deduper', async (job) => {
-  const { rawArticleId } = job.data;
+  const { rawArticleId, images = [] } = job.data;
 
   const rawArticle = await prisma.rawArticle.findUnique({
     where: { id: rawArticleId },
@@ -82,6 +83,7 @@ const worker = createWorker<DeduperJob>('deduper', async (job) => {
       source: rawArticle.source,
       publishedAt: rawArticle.publishedAt ?? rawArticle.fetchedAt,
       imageUrl: rawArticle.imageUrl,
+      images,
     },
   });
 

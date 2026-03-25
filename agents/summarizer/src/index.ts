@@ -1,4 +1,4 @@
-import Anthropic from '@anthropic-ai/sdk';
+import Groq from 'groq-sdk';
 import { prisma, createWorker, reshareQueue, analyticsQueue } from '@goodnews/shared';
 
 interface SummarizerJob {
@@ -8,8 +8,8 @@ interface SummarizerJob {
   sentiment?: 'POSITIVE' | 'UPLIFTING' | 'INSPIRING';
 }
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY,
 });
 
 const worker = createWorker<SummarizerJob>('summarizer', async (job) => {
@@ -34,38 +34,39 @@ const worker = createWorker<SummarizerJob>('summarizer', async (job) => {
     return;
   }
 
-  const contentSnippet = content.slice(0, 2000);
+  const contentSnippet = content.slice(0, 600);
 
-  const message = await anthropic.messages.create({
-    model: 'claude-sonnet-4-6',
-    max_tokens: 512,
+  const message = await groq.chat.completions.create({
+    model: 'llama-3.1-8b-instant',
+    max_tokens: 500,
     messages: [
       {
         role: 'user',
-        content: `You are a joyful news summarizer for GoodNews, a platform dedicated to positive, uplifting stories.
+        content: `You are an editorial summarizer for GoodNews, a premium platform for positive, uplifting stories.
 
 Article Title: ${title}
 Article Content: ${contentSnippet}
 
-Write summaries with an optimistic, engaging tone. Focus on the hopeful and positive aspects.
+Write with an optimistic, intelligent, editorial tone. Be specific — use names, numbers, and facts from the article.
 
 Respond with ONLY valid JSON (no markdown, no extra text):
 {
-  "shortSummary": "<tweet-length summary, ≤280 chars, optimistic and engaging, makes people want to share>",
-  "longSummary": "<2-3 sentences, engaging narrative that draws readers in, highlights the positive impact>",
-  "keyTakeaway": "<one sentence explaining why this story matters and why readers should care>",
+  "shortSummary": "<tweet-length, ≤280 chars, specific and shareable>",
+  "longSummary": "<2-3 sentences of engaging editorial narrative that draws readers in>",
+  "tldr": ["<key fact or finding #1>", "<key fact or finding #2>", "<key fact or finding #3>"],
+  "keyTakeaway": "<one sentence: why this matters to the world>",
   "sentiment": "<POSITIVE|UPLIFTING|INSPIRING>"
 }`,
       },
     ],
   });
 
-  const responseText =
-    message.content[0].type === 'text' ? message.content[0].text.trim() : '';
+  const responseText = message.choices[0]?.message?.content?.trim() ?? '';
 
   let summaryData: {
     shortSummary: string;
     longSummary: string;
+    tldr: string[];
     keyTakeaway: string;
     sentiment: 'POSITIVE' | 'UPLIFTING' | 'INSPIRING';
   };
@@ -80,6 +81,7 @@ Respond with ONLY valid JSON (no markdown, no extra text):
     summaryData = {
       shortSummary: title.slice(0, 280),
       longSummary: content.slice(0, 500),
+      tldr: [],
       keyTakeaway: 'A positive development worth celebrating.',
       sentiment,
     };
@@ -94,6 +96,7 @@ Respond with ONLY valid JSON (no markdown, no extra text):
       articleId,
       shortSummary: summaryData.shortSummary,
       longSummary: summaryData.longSummary,
+      tldr: Array.isArray(summaryData.tldr) ? summaryData.tldr.slice(0, 5) : [],
       sentiment: summaryData.sentiment || sentiment,
       keyTakeaway: summaryData.keyTakeaway,
     },
@@ -135,4 +138,26 @@ Respond with ONLY valid JSON (no markdown, no extra text):
   );
 });
 
+async function requeueUnsummarized() {
+  const articles = await prisma.article.findMany({
+    where: { summary: null },
+    select: { id: true, title: true, cleanContent: true },
+    take: 100,
+    orderBy: { createdAt: 'desc' },
+  });
+
+  if (articles.length === 0) return;
+  console.log(`[Summarizer] Re-queuing ${articles.length} unsummarized articles…`);
+
+  const { summarizerQueue } = await import('@goodnews/shared');
+  for (const a of articles) {
+    await summarizerQueue.add(
+      'summarize',
+      { articleId: a.id, title: a.title, content: a.cleanContent.slice(0, 600) },
+      { attempts: 5, backoff: { type: 'exponential', delay: 10000 }, removeOnComplete: 100, removeOnFail: 50 }
+    );
+  }
+}
+
 console.log('[Summarizer] Worker started');
+requeueUnsummarized().catch((e) => console.error('[Summarizer] Requeue error:', e.message));

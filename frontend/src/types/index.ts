@@ -10,6 +10,7 @@ export interface Category {
 export interface Summary {
   shortSummary: string
   longSummary: string
+  tldr: string[]
   sentiment: 'POSITIVE' | 'UPLIFTING' | 'INSPIRING'
   keyTakeaway: string
 }
@@ -36,6 +37,7 @@ export interface Article {
   source: string
   publishedAt: string
   imageUrl: string | null
+  images: string[]
   processedAt: string
   createdAt: string
   categoryId: string | null

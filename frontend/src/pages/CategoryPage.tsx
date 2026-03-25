@@ -149,21 +149,48 @@ export default function CategoryPage() {
         )}
 
         {!isLoading && allArticles.length > 0 && (
-          <>
+          <div className="space-y-8">
             {featuredArticle && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
-                className="mb-8"
               >
                 <NewsCard article={featuredArticle} variant="featured" />
               </motion.div>
             )}
 
-            {gridArticles.length > 0 && (
+            {/* Spotlight + side stack */}
+            {gridArticles[0] && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.1 }}
+                className="grid grid-cols-1 lg:grid-cols-5 gap-5"
+              >
+                <div className="lg:col-span-3 min-h-[22rem]">
+                  <NewsCard article={gridArticles[0]} variant="secondary" />
+                </div>
+                <div className="lg:col-span-2 grid grid-rows-2 gap-5">
+                  {gridArticles.slice(1, 3).map((article, i) => (
+                    <div key={article.id} className="min-h-[10rem]">
+                      <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.4, delay: 0.15 + i * 0.08 }}
+                        className="h-full"
+                      >
+                        <NewsCard article={article} variant="secondary" />
+                      </motion.div>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {gridArticles.slice(3).length > 0 && (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                {gridArticles.map((article, i) => (
+                {gridArticles.slice(3).map((article, i) => (
                   <motion.div
                     key={article.id}
                     initial={{ opacity: 0, y: 20 }}
@@ -177,7 +204,7 @@ export default function CategoryPage() {
             )}
 
             {hasNextPage && (
-              <div className="flex justify-center mt-10">
+              <div className="flex justify-center pt-2 pb-6">
                 <button
                   onClick={() => fetchNextPage()}
                   disabled={isFetchingNextPage}
@@ -197,7 +224,7 @@ export default function CategoryPage() {
                 </button>
               </div>
             )}
-          </>
+          </div>
         )}
       </div>
     </div>
