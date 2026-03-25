@@ -1,0 +1,28 @@
+.section {
+  margin-bottom: var(--space-600);
+}
+
+.header {
+  margin-bottom: var(--space-300);
+}
+
+.title {
+  color: var(--color-neutral-900);
+}
+
+.description {
+  color: var(--color-neutral-600);
+  margin-top: var(--space-100);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-400);
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  }
+}

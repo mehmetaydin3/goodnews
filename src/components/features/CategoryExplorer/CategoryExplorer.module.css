@@ -1,0 +1,108 @@
+.section {
+  padding: var(--space-96) var(--space-6);
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: var(--space-12);
+}
+
+.title {
+  margin-bottom: var(--space-8) !important;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  color: var(--color-text-secondary) !important;
+  max-width: 600px;
+  margin: 0 auto !important;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-6);
+}
+
+.tile {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--color-border-subtle);
+  padding: var(--space-8);
+  text-align: left;
+  cursor: pointer;
+  background: var(--color-surface-elevated);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.tile:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+}
+
+.tileBg {
+  position: absolute;
+  inset: 0;
+  opacity: 0.12;
+  background: var(--tile-gradient);
+  transition: opacity var(--transition-base);
+}
+
+.tile:hover .tileBg {
+  opacity: 0.22;
+}
+
+.tileContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.tileIcon {
+  font-size: 36px;
+  margin-bottom: var(--space-2);
+  display: block;
+}
+
+.tileLabel {
+  font-size: var(--font-size-xl) !important;
+  color: var(--color-text-primary) !important;
+}
+
+.tileDesc {
+  color: var(--color-text-secondary) !important;
+  line-height: var(--line-height-relaxed) !important;
+}
+
+.tileCount {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-brand-primary);
+}
+
+.cta {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-10);
+}
+
+@media (max-width: 1024px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .grid { grid-template-columns: 1fr; }
+  .section { padding: var(--space-48) var(--space-4); }
+}

@@ -1,0 +1,1 @@
+export { MusicianDetailHero } from './MusicianDetailHero';

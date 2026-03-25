@@ -1,0 +1,40 @@
+.contextBlock {
+  padding: var(--space-64) var(--space-16);
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.text {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-relaxed);
+  margin-bottom: var(--space-24);
+}
+
+.quoteContainer {
+  margin: var(--space-64) 0;
+  padding: var(--space-32) 0;
+  border-top: 1px solid var(--color-border-subtle);
+  border-bottom: 1px solid var(--color-border-subtle);
+  text-align: center;
+}
+
+.quoteText {
+  color: var(--color-neutral-900);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-tight);
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 768px) {
+  .contextBlock {
+    padding: var(--space-120) var(--space-32);
+  }
+  
+  .quoteText {
+    font-size: var(--font-size-display);
+  }
+}

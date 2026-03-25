@@ -1,0 +1,105 @@
+.grid {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 32px 48px 80px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-24);
+  align-items: stretch;
+}
+
+/* Each listitem fills the grid cell so cards can be equal height */
+.listItem {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  animation: cardReveal 0.45s ease both;
+}
+
+/* Stagger delays for first 12 cards */
+.listItem:nth-child(1)  { animation-delay: 0.03s; }
+.listItem:nth-child(2)  { animation-delay: 0.06s; }
+.listItem:nth-child(3)  { animation-delay: 0.09s; }
+.listItem:nth-child(4)  { animation-delay: 0.12s; }
+.listItem:nth-child(5)  { animation-delay: 0.15s; }
+.listItem:nth-child(6)  { animation-delay: 0.18s; }
+.listItem:nth-child(7)  { animation-delay: 0.21s; }
+.listItem:nth-child(8)  { animation-delay: 0.24s; }
+.listItem:nth-child(9)  { animation-delay: 0.27s; }
+.listItem:nth-child(10) { animation-delay: 0.30s; }
+.listItem:nth-child(11) { animation-delay: 0.33s; }
+.listItem:nth-child(12) { animation-delay: 0.36s; }
+
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Skeleton loaders */
+.skeleton {
+  border-radius: var(--radius-xl);
+  background: linear-gradient(
+    90deg,
+    var(--color-border-subtle) 25%,
+    var(--color-border-default) 50%,
+    var(--color-border-subtle) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  height: 460px;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Empty state */
+.empty {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-16);
+  padding: var(--space-96) var(--space-24);
+  text-align: center;
+}
+
+.emptyIcon {
+  font-size: 56px;
+  display: block;
+  opacity: 0.35;
+}
+
+.emptyTitle {
+  color: var(--color-text-primary) !important;
+}
+
+.emptyDesc {
+  color: var(--color-text-secondary) !important;
+  max-width: 400px;
+}
+
+@media (max-width: 1100px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 24px 32px 64px;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 20px 20px 56px;
+    gap: var(--space-16);
+  }
+}
+
+@media (max-width: 560px) {
+  .grid {
+    grid-template-columns: 1fr;
+    padding: 16px 16px 48px;
+    gap: var(--space-16);
+  }
+}

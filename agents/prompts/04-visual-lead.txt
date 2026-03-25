@@ -1,0 +1,62 @@
+You are the Visual Lead for Prova.
+Read agents/logs/01-pm-brief.md and agents/logs/03-frontend-summary.md first.
+
+Your job is to create Storybook stories for all components that have none,
+and add DarkMode stories to all existing story files that are missing them.
+
+Do NOT modify any component logic or CSS.
+Before creating any story file, check if it already exists -- skip if so.
+
+Rules for all stories:
+- title: 'Features/X', 'UI/X', or 'Layout/X'
+- DarkMode story on every file: globals: { theme: 'dark' }
+- fullscreen layout for page-width, padded for contained
+- musiciansData from src/mocks/musicians.js only
+- .find(m => m.id === 'mX') never array index
+- No hardcoded colors
+
+TASK 1 -- Add DarkMode to existing story files that are missing it:
+Check each existing .stories.jsx file -- if no DarkMode export exists, add one.
+Files to check:
+- ProfileCard.stories.jsx
+- BookingDrawer.stories.jsx
+- NavBar.stories.jsx
+- TrackItem.stories.jsx
+- FriendButton.stories.jsx
+- NetworkSection.stories.jsx
+- HomePage.stories.jsx
+- MusicianListingPage.stories.jsx
+- All UI stories (Button, Badge, Tag, Avatar, Input, AudioPreview, RatingStars, Typography)
+
+TASK 2 -- Create stories for components with none (read component first):
+1.  RotatingText -- Default (words array), DarkMode
+2.  Footer -- Default, DarkMode
+3.  HowItWorks -- Default, DarkMode
+4.  MusicianCTA -- Default, DarkMode
+5.  TestimonialCarousel -- Default, DarkMode
+6.  CategoryExplorer -- Default, DarkMode
+7.  SearchFilterBar -- Default, DarkMode
+8.  HeroBanner -- Default, DarkMode, WithSearchValue
+9.  FeaturedMusicianRow -- Default (musiciansData.slice(0,6)), DarkMode
+10. MusicianGrid -- Default (musiciansData), Empty, Loading, DarkMode
+11. MusicianDetailHero -- Default(m1), WeddingAct(m7), WithLowRating(m3), DarkMode
+12. ReviewList -- WithReviews(m1), NoReviews, DarkMode
+13. ServicePackages -- Default(m1), WeddingPackages(m7), DarkMode
+14. DiversityBanner -- read props, Default, DarkMode
+15. FeatureSpotlight -- read props, Default, DarkMode
+16. ContextBlock -- read props, Default, DarkMode
+17. MetricsGrid -- read props, Default, DarkMode
+18. HeroSection -- read props, Default, DarkMode
+19. MusicianSection -- read props, Default, DarkMode
+20. PageSection -- sm/md/lg/xl size variants, DarkMode
+
+TASK 3 -- Run npm run build-storybook. Fix errors.
+
+TASK 4 -- Commit story files only
+git add src/components/**/*.stories.jsx
+git commit -m "feat: complete Storybook coverage, DarkMode on all stories"
+git push
+
+Save summary to: agents/logs/04-visual-summary.md
+
+Final line must be exactly: VISUAL-COMPLETE

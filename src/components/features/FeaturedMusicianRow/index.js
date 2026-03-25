@@ -1,0 +1,1 @@
+export { FeaturedMusicianRow } from './FeaturedMusicianRow';

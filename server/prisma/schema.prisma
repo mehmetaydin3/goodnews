@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  passwordHash  String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  profile       MusicianProfile?
+}
+
+model MusicianProfile {
+  id              String   @id @default(uuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName        String
+  headline        String?
+  bio             String?
+  location        String?
+  timezone        String?
+  languages       String?  // JSON stringified array
+  instruments     String?  // JSON stringified array
+  genres          String?  // JSON stringified array
+  skills          String?  // JSON stringified array
+  ratingAverage   Float    @default(0)
+  ratingCount     Int      @default(0)
+  completedJobs   Int      @default(0)
+  responseTime    String?
+  gallery         String?  // JSON stringified array of URLs
+  audioSamples    String?  // JSON stringified array of objects
+  videoSamples    String?  // JSON stringified array of objects
+  badges          String?  // JSON stringified array
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  services        Service[]
+}
+
+model Service {
+  id                String   @id @default(uuid())
+  musicianId        String
+  musician          MusicianProfile @relation(fields: [musicianId], references: [id], onDelete: Cascade)
+  serviceType       String
+  title             String
+  description       String?
+  deliverables      String?  // JSON stringified array
+  startingPrice     Float
+  priceType         String   // fixed, hourly, starting
+  turnaroundTime    String?
+  revisionsIncluded Int      @default(0)
+  tags              String?  // JSON stringified array
+  deliveryMode      String   // remote, in-person
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}

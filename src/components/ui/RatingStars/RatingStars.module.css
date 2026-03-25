@@ -1,0 +1,43 @@
+.container {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-micro);
+}
+
+.stars {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-micro);
+}
+
+.ratingNumber {
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+.reviewCount {
+  font-family: var(--font-family-base);
+  color: var(--color-text-tertiary);
+  line-height: 1;
+}
+
+/* Sizes */
+.sm .ratingNumber {
+  font-size: var(--font-size-xs);
+}
+
+.sm .reviewCount {
+  font-size: var(--font-size-xs);
+}
+
+.md .ratingNumber {
+  font-size: var(--font-size-sm);
+}
+
+.md .reviewCount {
+  font-size: var(--font-size-sm);
+}

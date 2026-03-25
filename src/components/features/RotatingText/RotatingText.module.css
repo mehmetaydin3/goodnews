@@ -1,0 +1,17 @@
+.rotatingText {
+  display: inline-block;
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+  color: var(--color-brand-primary);
+  /* Ensure it has a minimum width to avoid layout jumping too much */
+  min-width: 4ch;
+}
+
+.fadeIn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fadeOut {
+  opacity: 0;
+  transform: translateY(-10px);
+}
