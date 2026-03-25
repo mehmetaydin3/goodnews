@@ -10,10 +10,23 @@ const PORT = parseInt(process.env.PORT || '3001', 10);
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 const ANALYTICS_URL = process.env.ANALYTICS_URL || 'http://localhost:3002';
 
+// Accept all *.vercel.app previews + configured production URL + local dev
+const ALLOWED_ORIGINS = [
+  FRONTEND_URL,
+  'http://localhost:3000',
+  'http://localhost:5173',
+];
+
 app.use(helmet());
 app.use(
   cors({
-    origin: [FRONTEND_URL, 'http://localhost:3000', 'http://localhost:5173'],
+    origin: (origin, cb) => {
+      if (!origin || ALLOWED_ORIGINS.includes(origin) || /\.vercel\.app$/.test(origin)) {
+        cb(null, true);
+      } else {
+        cb(new Error(`CORS: origin ${origin} not allowed`));
+      }
+    },
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   })

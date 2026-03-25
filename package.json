@@ -7,7 +7,10 @@
     "dev": "npm run build:shared && concurrently \"npm run dev --workspace=api\" \"npm run dev --workspace=frontend\"",
     "agents:all": "npm run build:shared && concurrently \"npm run start --workspace=agents/fetcher\" \"npm run start --workspace=agents/deduper\" \"npm run start --workspace=agents/classifier\" \"npm run start --workspace=agents/summarizer\" \"npm run start --workspace=agents/reshare\" \"npm run start --workspace=agents/analytics\"",
     "db:migrate": "npm run migrate --workspace=shared",
-    "db:seed": "npm run seed --workspace=shared"
+    "db:seed": "npm run seed --workspace=shared",
+    "db:deploy": "cd shared && npx prisma migrate deploy",
+    "start:api": "npm run db:deploy && npm run start --workspace=api",
+    "start:agents": "npm run agents:all"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
