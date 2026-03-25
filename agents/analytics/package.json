@@ -1,0 +1,17 @@
+{
+  "name": "@goodnews/agent-analytics",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "dev": "ts-node-dev --respawn src/index.ts"
+  },
+  "dependencies": {
+    "@goodnews/shared": "*"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.4.5",
+    "@types/node": "^20.14.2"
+  }
+}

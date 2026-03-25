@@ -1,0 +1,116 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model RawArticle {
+  id          String   @id @default(cuid())
+  url         String   @unique
+  title       String
+  content     String   @db.Text
+  source      String
+  fetchedAt   DateTime @default(now())
+  processed   Boolean  @default(false)
+  duplicate   Boolean  @default(false)
+  imageUrl    String?
+  publishedAt DateTime?
+  createdAt   DateTime @default(now())
+
+  article Article?
+
+  @@index([processed])
+  @@index([fetchedAt])
+}
+
+model Article {
+  id            String    @id @default(cuid())
+  rawArticleId  String    @unique
+  url           String    @unique
+  title         String
+  cleanContent  String    @db.Text
+  source        String
+  publishedAt   DateTime
+  imageUrl      String?
+  processedAt   DateTime  @default(now())
+  createdAt     DateTime  @default(now())
+
+  rawArticle  RawArticle       @relation(fields: [rawArticleId], references: [id])
+  categoryId  String?
+  category    Category?        @relation(fields: [categoryId], references: [id])
+  summary     Summary?
+  analytics   ArticleAnalytics?
+  shares      SocialShare[]
+
+  @@index([categoryId])
+  @@index([publishedAt])
+  @@index([createdAt])
+}
+
+model Category {
+  id           String    @id @default(cuid())
+  name         String    @unique
+  slug         String    @unique
+  color        String    @default("#10B981")
+  emoji        String    @default("✨")
+  articleCount Int       @default(0)
+
+  articles Article[]
+
+  @@index([slug])
+}
+
+enum Sentiment {
+  POSITIVE
+  UPLIFTING
+  INSPIRING
+}
+
+model Summary {
+  id            String    @id @default(cuid())
+  articleId     String    @unique
+  shortSummary  String    @db.VarChar(280)
+  longSummary   String    @db.Text
+  sentiment     Sentiment @default(POSITIVE)
+  keyTakeaway   String    @db.Text
+  createdAt     DateTime  @default(now())
+
+  article Article @relation(fields: [articleId], references: [id])
+}
+
+model ArticleAnalytics {
+  id           String   @id @default(cuid())
+  articleId    String   @unique
+  views        Int      @default(0)
+  shares       Int      @default(0)
+  likes        Int      @default(0)
+  clickThrough Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  article Article @relation(fields: [articleId], references: [id])
+}
+
+enum SocialPlatform {
+  TWITTER
+  FACEBOOK
+  LINKEDIN
+  INSTAGRAM
+}
+
+model SocialShare {
+  id        String         @id @default(cuid())
+  articleId String
+  platform  SocialPlatform
+  shareUrl  String?
+  sharedAt  DateTime       @default(now())
+  engagement Int           @default(0)
+
+  article Article @relation(fields: [articleId], references: [id])
+
+  @@index([articleId])
+  @@index([platform])
+}

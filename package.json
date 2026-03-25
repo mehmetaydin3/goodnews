@@ -1,0 +1,15 @@
+{
+  "name": "goodnews",
+  "private": true,
+  "workspaces": ["agents/*", "shared", "api", "frontend"],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace=api\" \"npm run dev --workspace=frontend\"",
+    "agents:all": "concurrently \"npm run start --workspace=agents/fetcher\" \"npm run start --workspace=agents/deduper\" \"npm run start --workspace=agents/classifier\" \"npm run start --workspace=agents/summarizer\" \"npm run start --workspace=agents/reshare\" \"npm run start --workspace=agents/analytics\"",
+    "db:migrate": "npm run migrate --workspace=shared",
+    "db:seed": "npm run seed --workspace=shared"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "typescript": "^5.4.5"
+  }
+}
